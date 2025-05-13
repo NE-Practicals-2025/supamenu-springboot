@@ -1,6 +1,5 @@
 package com.david.springsecrest.security;
 
-import com.david.springsecrest.enums.EGender;
 import com.david.springsecrest.enums.EUserStatus;
 import com.david.springsecrest.models.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -30,8 +29,6 @@ public class UserPrincipal implements UserDetails {
 
     private String telephone;
 
-    private EGender gender;
-
     @JsonIgnore
     private String password;
 
@@ -49,7 +46,6 @@ public class UserPrincipal implements UserDetails {
                 user.getFirstName(),
                 user.getLastName(),
                 user.getTelephone(),
-                user.getGender(),
                 user.getPassword(),
                 user.getStatus(),
                 authorities);

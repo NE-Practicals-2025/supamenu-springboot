@@ -1,14 +1,18 @@
 package com.david.springsecrest.services.serviceImpls;
 
 
+import com.david.springsecrest.enums.ERestaurantType;
 import com.david.springsecrest.enums.ERole;
 import com.david.springsecrest.enums.EUserStatus;
 import com.david.springsecrest.exceptions.BadRequestException;
 import com.david.springsecrest.exceptions.ResourceNotFoundException;
 import com.david.springsecrest.helpers.Utility;
+import com.david.springsecrest.models.Restaurant;
 import com.david.springsecrest.models.User;
 import com.david.springsecrest.payload.request.UpdateUserDTO;
+import com.david.springsecrest.repositories.IRestaurantRepository;
 import com.david.springsecrest.repositories.IUserRepository;
+import com.david.springsecrest.services.IRestaurantService;
 import com.david.springsecrest.services.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -23,45 +27,47 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements IUserService {
+public class RestaurantServiceImpl implements IRestaurantService {
 
     private final IUserRepository userRepository;
+    private final IRestaurantRepository restaurantRepository;
 //    private final IFileService fileService;
 //    private final FileStorageService fileStorageService;
 
     @Override
-    public Page<User> getAll(Pageable pageable) {
-        return this.userRepository.findAll(pageable);
+    public Page<Restaurant> getAll(Pageable pageable) {
+        return this.restaurantRepository.findAll(pageable);
     }
 
     @Override
-    public User getById(UUID id) {
-        return this.userRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("User", "id", id.toString()));
+    public Restaurant getById(UUID id) {
+        return this.restaurantRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Restaurant", "id", id.toString()));
     }
 
     @Override
-    public User create(User user) {
+    public Restaurant create(Restaurant restaurant) {
         try {
-            Optional<User> userOptional = this.userRepository.findByEmail(user.getEmail());
-            if (userOptional.isPresent())
-                throw new BadRequestException(String.format("User with email '%s' already exists", user.getEmail()));
-            return this.userRepository.save(user);
+            Optional<Restaurant> restaurantOptional = this.restaurantRepository.findByRestaurantName(restaurant.getRestaurantName());
+            if (restaurantOptional.isPresent())
+                throw new BadRequestException(String.format("Restaurant with name '%s' already exists", restaurant.getRestaurantName()));
+            return this.restaurantRepository.save(restaurant);
         } catch (DataIntegrityViolationException ex) {
-            String errorMessage = Utility.getConstraintViolationMessage(ex, user);
+            String errorMessage = Utility.getConstraintViolationMessage(ex, restaurant);
             throw new BadRequestException(errorMessage, ex);
         }
     }
 
     @Override
-    public User save(User user) {
+    public Restaurant save(Restaurant restaurant) {
         try {
-            return this.userRepository.save(user);
+            return this.restaurantRepository.save(restaurant);
         } catch (DataIntegrityViolationException ex) {
-            String errorMessage = Utility.getConstraintViolationMessage(ex, user);
+            String errorMessage = Utility.getConstraintViolationMessage(ex, restaurant);
             throw new BadRequestException(errorMessage, ex);
         }
     }
+
 
 //    @Override
 //    public User update(UUID id, UpdateUserDTO dto) {
@@ -81,66 +87,21 @@ public class UserServiceImpl implements IUserService {
 //        return this.userRepository.save(entity);
 //    }
 
-    @Override
-    public User update(UUID id, UpdateUserDTO dto) {
-        User user = this.userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id.toString()));
-        user.setEmail(dto.getEmail());
-        user.setFirstName(dto.getFirstName());
-        user.setLastName(dto.getLastName());
-        user.setTelephone(dto.getTelephone());
-        return this.userRepository.save(user);
-    }
-
-    @Override
-    public boolean delete(UUID id) {
-        this.userRepository.findById(id).orElseThrow(() ->
-                new ResourceNotFoundException("User", "id", id));
-
-        this.userRepository.deleteById(id);
-        return true;
-    }
-
-    @Override
-    public Page<User> getAllByRole(Pageable pageable, ERole role) {
-        return this.userRepository.findByRoles(pageable, role);
-    }
-
-    @Override
-    public Page<User> searchUser(Pageable pageable, String searchKey) {
-        return this.userRepository.searchUser(pageable, searchKey);
-    }
-
-    @Override
-    public User getLoggedInUser() {
-        String email;
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (principal instanceof UserDetails) {
-            email = ((UserDetails) principal).getUsername();
-        } else {
-            email = principal.toString();
-        }
-
-        return userRepository.findByEmail(email).orElseThrow(
-                () -> new ResourceNotFoundException("User", "id", email));
-    }
-
-    @Override
-    public User getByEmail(String email) {
-        return this.userRepository.findByEmail(email).orElseThrow(
-                () -> new ResourceNotFoundException("User", "id", email));
-    }
+//    @Override
+//    public Restaurant update(UUID id, UpdateUserDTO dto) {
+//        User user = this.userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id.toString()));
+//        user.setEmail(dto.getEmail());
+//        user.setFirstName(dto.getFirstName());
+//        user.setLastName(dto.getLastName());
+//        user.setTelephone(dto.getTelephone());
+//    }
 
 
     @Override
-    public User changeStatus(UUID id, EUserStatus status) {
-        User entity = this.userRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("User", "id", id.toString()));
-
-        entity.setStatus(status);
-
-        return this.userRepository.save(entity);
+    public Page<Restaurant> searchRestaurant(Pageable pageable, String searchKey) {
+        return this.restaurantRepository.searchRestaurant(pageable, searchKey);
     }
+
 
 //    @Override
 //    public User changeProfileImage(UUID id, File file) {
@@ -166,9 +127,4 @@ public class UserServiceImpl implements IUserService {
 //        user.setProfileImage(null);
 //        return this.userRepository.save(user);
 //    }
-
-    @Override
-    public Optional<User> findByActivationCode(String activationCode) {
-        return this.userRepository.findByActivationCode(activationCode);
-    }
 }

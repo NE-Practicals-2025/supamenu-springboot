@@ -26,15 +26,16 @@ public class SpringSecRestApplication {
     public boolean registerRoles() {
         Set<ERole> roles = new HashSet<>();
         roles.add(ERole.ADMIN);
-        roles.add(ERole.NORMAL);
+        roles.add(ERole.OWNER);
+        roles.add(ERole.CLIENT);
 
         for (ERole role : roles) {
             Optional<Role> roleByName = roleRepository.findByName(role);
             if (roleByName.isEmpty()) {
                 Role newRole = new Role(role, role.toString());
+                System.out.println(newRole);
                 roleRepository.save(newRole);
                 System.out.println("Created: " + role);
-
             }
         }
         return true;

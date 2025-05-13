@@ -1,7 +1,6 @@
 package com.david.springsecrest.payload.request;
 
 
-import com.david.springsecrest.enums.EGender;
 import com.david.springsecrest.enums.ERole;
 import com.david.springsecrest.helpers.ValidPassword;
 import jakarta.validation.constraints.Email;
@@ -24,8 +23,6 @@ public class CreateUserDTO {
     @NotBlank
     @Pattern(regexp = "[0-9]{9,12}", message = "Your phone is not a valid tel we expect 2507***, or 07*** or 7***")
     private String telephone;
-
-    private EGender gender;
 
     private ERole role;
 

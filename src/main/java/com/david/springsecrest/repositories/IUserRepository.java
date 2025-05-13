@@ -20,6 +20,8 @@ public interface IUserRepository extends JpaRepository<User, UUID> {
 
     Page<User> findByRoles(Pageable pageable, ERole role);
 
+    @Query("SELECT u FROM User u" +
+            " WHERE (u.activationCode.activationCode=:activationCode) ")
     Optional<User> findByActivationCode(String activationCode);
 
     @Query("SELECT u FROM User u" +

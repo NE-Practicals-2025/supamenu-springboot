@@ -34,7 +34,7 @@ public class OpenApiConfig {
                                 ))
                 .info(
                         new Info()
-                                .title("Springboot Project OpenAPI Docs")
-                                .version("1.0.0").description("Spring Boot Project OpenAPI Docs"));
+                                .title("SupaMenu API")
+                                .version("1.0.0").description("SupaMenu API Documentation"));
     }
 }
