@@ -1,9 +1,7 @@
 package com.david.springsecrest.models;
 
 import com.david.springsecrest.enums.ERestaurantType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,21 +16,22 @@ import java.util.UUID;
 @Data
 public class Restaurant {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private UUID userId;
-    private String restaurantName;
-    private String restaurantCompleteName;
+    private String name;
+    private String completeName;
     private String contactNumber;
     private String ownerPhone;
     private String ownerEmail;
     private String ownerName;
-    private ERestaurantType restaurantType;
+    private ERestaurantType type;
     private File profileImage;
 
     public Restaurant(String restaurantName, ERestaurantType restaurantType, String restaurantCompleteName, String contactNumber, String ownerPhone, String ownerEmail, String ownerName) {
-        this.restaurantName = restaurantName;
-        this.restaurantType = restaurantType;
-        this.restaurantCompleteName = restaurantCompleteName;
+        this.name = restaurantName;
+        this.type = restaurantType;
+        this.completeName = restaurantCompleteName;
         this.contactNumber = contactNumber;
         this.ownerPhone = ownerPhone;
         this.ownerEmail = ownerEmail;
@@ -40,9 +39,9 @@ public class Restaurant {
     }
 
     public Restaurant(UUID userId, String restaurantName, ERestaurantType restaurantType, String restaurantCompleteName, String contactNumber, String ownerPhone, String ownerEmail, String ownerName) {
-        this.restaurantName = restaurantName;
-        this.restaurantType = restaurantType;
-        this.restaurantCompleteName = restaurantCompleteName;
+        this.name = restaurantName;
+        this.type = restaurantType;
+        this.completeName = restaurantCompleteName;
         this.contactNumber = contactNumber;
         this.ownerPhone = ownerPhone;
         this.ownerEmail = ownerEmail;

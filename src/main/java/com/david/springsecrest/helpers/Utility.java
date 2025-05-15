@@ -84,7 +84,7 @@ public class Utility {
     public static String getConstraintViolationMessage(DataIntegrityViolationException ex, Restaurant restaurant) {
         String message = ex.getMostSpecificCause().getMessage();
         if (message.contains("name")) {
-            return String.format("Restaurant with name '%s' already exists", restaurant.getRestaurantName());
+            return String.format("Restaurant with name '%s' already exists", restaurant.getName());
         }
         // Add more checks for other unique constraints if necessary
         return "A unique constraint violation occurred";

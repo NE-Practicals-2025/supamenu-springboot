@@ -31,8 +31,6 @@ public class RestaurantServiceImpl implements IRestaurantService {
 
     private final IUserRepository userRepository;
     private final IRestaurantRepository restaurantRepository;
-//    private final IFileService fileService;
-//    private final FileStorageService fileStorageService;
 
     @Override
     public Page<Restaurant> getAll(Pageable pageable) {
@@ -48,9 +46,9 @@ public class RestaurantServiceImpl implements IRestaurantService {
     @Override
     public Restaurant create(Restaurant restaurant) {
         try {
-            Optional<Restaurant> restaurantOptional = this.restaurantRepository.findByRestaurantName(restaurant.getRestaurantName());
+            Optional<Restaurant> restaurantOptional = this.restaurantRepository.findRestaurantByName(restaurant.getName());
             if (restaurantOptional.isPresent())
-                throw new BadRequestException(String.format("Restaurant with name '%s' already exists", restaurant.getRestaurantName()));
+                throw new BadRequestException(String.format("Restaurant with name '%s' already exists", restaurant.getName()));
             return this.restaurantRepository.save(restaurant);
         } catch (DataIntegrityViolationException ex) {
             String errorMessage = Utility.getConstraintViolationMessage(ex, restaurant);

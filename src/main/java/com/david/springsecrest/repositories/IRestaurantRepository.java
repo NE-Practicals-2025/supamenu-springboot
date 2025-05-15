@@ -16,11 +16,10 @@ import java.util.UUID;
 public interface IRestaurantRepository extends JpaRepository<Restaurant, UUID> {
 
     Optional<Restaurant> findRestaurantById(UUID restaurantId);
-    Optional<Restaurant> findByRestaurantName(String restaurantName);
+    Optional<Restaurant> findRestaurantByName(String restaurantName);
 
     @Query("SELECT r FROM Restaurant r" +
-            " WHERE (lower(r.restaurantName)  LIKE ('%' || lower(:searchKey) || '%')) " +
-            " OR (lower(r.restaurantName) LIKE ('%' || lower(:searchKey) || '%')) " +
-            " OR (lower(r.restaurantType) LIKE ('%' || lower(:searchKey) || '%'))")
+            " WHERE (lower(r.name)  LIKE ('%' || lower(:searchKey) || '%')) " +
+            " OR (lower(r.ownerName) LIKE ('%' || lower(:searchKey) || '%')) ")
     Page<Restaurant> searchRestaurant(Pageable pageable, String searchKey);
 }
